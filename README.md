@@ -16,6 +16,7 @@ A production-ready Python CLI tool for validating and auditing `.env` files usin
 - 🔒 **Security auditing** - Detect placeholders, weak secrets, and test values
 - 📊 **Rich CLI output** - Beautiful terminal output using Rich
 - 🤖 **CI/CD friendly** - JSON output mode and proper exit codes
+- ⚙️  **One-command CI setup** - Auto-generate GitHub Actions workflow and pre-commit hooks
 - 🎯 **Type-safe** - Full type hints and modern Python 3.11+ support
 
 ## Installation
@@ -63,6 +64,33 @@ envguard diff
 ```
 
 ## Commands
+
+### `envguard setup-ci`
+
+Bootstrap CI integration for your project in one command.
+
+```bash
+# Interactive — prompts whether to also set up pre-commit
+envguard setup-ci
+
+# Create workflow + pre-commit config in one shot
+envguard setup-ci --pre-commit
+
+# Create workflow only, skip pre-commit
+envguard setup-ci --no-pre-commit
+```
+
+What it does:
+
+1. **Detects your Git repository** — walks up directories to find `.git/`. Exits with an error if not inside a repo.
+2. **Creates `.github/workflows/envguard.yml`** — a ready-to-use GitHub Actions workflow that runs `envguard check` and `envguard audit` on every push and pull request.
+3. **Optionally creates `.pre-commit-config.yaml`** — adds envguard hooks so every `git commit` is automatically validated.
+
+Existing files are never overwritten — the command skips them with a warning.
+
+**Exit codes:**
+- `0` - Setup completed successfully
+- `2` - Error (no Git repository found)
 
 ### `envguard check`
 

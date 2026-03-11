@@ -200,5 +200,33 @@ def init(
     raise typer.Exit(code=exit_code)
 
 
+@app.command()
+def setup_ci(
+    pre_commit: Optional[bool] = typer.Option(
+        None,
+        "--pre-commit/--no-pre-commit",
+        help="Set up .pre-commit-config.yaml (prompted if not specified)",
+    ),
+) -> None:
+    """
+    Set up CI integration for the current project.
+
+    Detects your Git repository root, creates a GitHub Actions workflow
+    (.github/workflows/envguard.yml) that runs envguard check and audit
+    on every push and pull request, and optionally creates a
+    .pre-commit-config.yaml to enforce checks on every commit.
+    """
+    app_instance = EnvGuardApp(console=console)
+
+    # If flag not explicitly passed, ask interactively
+    if pre_commit is None:
+        pre_commit = typer.confirm(
+            "Also set up pre-commit hooks?", default=False
+        )
+
+    _, exit_code = app_instance.setup_ci(setup_precommit=pre_commit)
+    raise typer.Exit(code=exit_code)
+
+
 if __name__ == "__main__":
     app()

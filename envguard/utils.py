@@ -59,6 +59,29 @@ def find_schema_file(start_path: Path = Path.cwd()) -> Path | None:
     return None
 
 
+def find_git_root(start_path: Path = Path.cwd()) -> Path | None:
+    """
+    Find the root of the Git repository by walking up directories.
+
+    Args:
+        start_path: Directory to start searching from
+
+    Returns:
+        Path to directory containing .git, or None if not a git repo
+    """
+    current = start_path.resolve()
+
+    for _ in range(20):
+        if (current / ".git").is_dir():
+            return current
+        parent = current.parent
+        if parent == current:
+            break
+        current = parent
+
+    return None
+
+
 def ensure_path(path: Path | str | None, default_name: str) -> Path:
     """
     Ensure a path exists or use default.

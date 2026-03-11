@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, field
 from enum import Enum
+from pathlib import Path
 from typing import Optional
 
 
@@ -93,6 +94,19 @@ class AuditFinding:
     category: str
     message: str
     value_preview: Optional[str] = None
+
+
+@dataclass
+class SetupCIResult:
+    """Result of the setup-ci command."""
+
+    git_detected: bool = False
+    project_root: Optional[Path] = None
+    workflow_created: bool = False
+    workflow_path: Optional[Path] = None
+    precommit_created: bool = False
+    precommit_path: Optional[Path] = None
+    skipped_existing: list[str] = field(default_factory=list)
 
 
 @dataclass

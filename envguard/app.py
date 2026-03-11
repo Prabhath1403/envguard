@@ -4,7 +4,7 @@ from pathlib import Path
 from rich.console import Console
 
 from envguard import auditor, diff_engine, formatter, parser, schema, utils, validator
-from envguard.models import AuditResult, DiffResult, ValidationResult
+from envguard.models import AuditResult, DiffResult, SetupCIResult, ValidationResult
 
 
 class EnvGuardApp:
@@ -231,3 +231,138 @@ class EnvGuardApp:
         except (FileNotFoundError, ValueError, PermissionError) as e:
             self.console.print(f"[red]Error:[/red] {e}", style="bold red")
             return 2
+
+    # -----------------------------------------------------------------
+    # Workflow YAML template
+    # -----------------------------------------------------------------
+
+    _CI_WORKFLOW_TEMPLATE = """\
+name: Validate Environment
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  envguard:
+    name: envguard check & audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install envguard
+        run: pip install envguard
+
+      - name: Validate .env schema
+        run: envguard check --json
+
+      - name: Security audit
+        run: envguard audit --json
+"""
+
+    _PRECOMMIT_CONFIG_TEMPLATE = """\
+repos:
+  - repo: https://github.com/Prabhath1403/envguard
+    rev: v0.1.0  # replace with the latest tag
+    hooks:
+      - id: envguard-check
+      - id: envguard-audit
+"""
+
+    def setup_ci(
+        self,
+        project_path: Path | None = None,
+        setup_precommit: bool = False,
+    ) -> tuple[SetupCIResult, int]:
+        """
+        Set up CI integration for the current project.
+
+        Steps:
+        1. Detect Git repository root
+        2. Create .github/workflows/envguard.yml
+        3. Optionally create .pre-commit-config.yaml
+
+        Args:
+            project_path: Root path to use (auto-detected via git root if None)
+            setup_precommit: Whether to create a .pre-commit-config.yaml
+
+        Returns:
+            Tuple of (SetupCIResult, exit_code)
+        """
+        result = SetupCIResult()
+
+        # -- 1. Detect Git root ------------------------------------------------
+        start = (project_path or Path.cwd()).resolve()
+        git_root = utils.find_git_root(start)
+
+        if git_root is None:
+            self.console.print(
+                "[red]Error:[/red] No Git repository found. "
+                "Run [bold]git init[/bold] first.",
+                style="bold red",
+            )
+            return result, 2
+
+        result.git_detected = True
+        result.project_root = git_root
+        self.console.print(
+            f"[green]✓[/green] Git repository detected: [bold]{git_root}[/bold]"
+        )
+
+        # -- 2. Create GitHub Actions workflow ----------------------------------
+        workflows_dir = git_root / ".github" / "workflows"
+        workflow_path = workflows_dir / "envguard.yml"
+
+        if workflow_path.exists():
+            self.console.print(
+                f"[yellow]⚠[/yellow]  Workflow already exists, skipping: "
+                f"[dim]{workflow_path}[/dim]"
+            )
+            result.skipped_existing.append(str(workflow_path))
+        else:
+            workflows_dir.mkdir(parents=True, exist_ok=True)
+            workflow_path.write_text(self._CI_WORKFLOW_TEMPLATE)
+            result.workflow_created = True
+            result.workflow_path = workflow_path
+            self.console.print(
+                f"[green]✓[/green] Created workflow: [bold]{workflow_path}[/bold]"
+            )
+
+        # -- 3. Optionally set up pre-commit ------------------------------------
+        if setup_precommit:
+            precommit_path = git_root / ".pre-commit-config.yaml"
+
+            if precommit_path.exists():
+                self.console.print(
+                    f"[yellow]⚠[/yellow]  pre-commit config already exists, skipping: "
+                    f"[dim]{precommit_path}[/dim]"
+                )
+                result.skipped_existing.append(str(precommit_path))
+            else:
+                precommit_path.write_text(self._PRECOMMIT_CONFIG_TEMPLATE)
+                result.precommit_created = True
+                result.precommit_path = precommit_path
+                self.console.print(
+                    f"[green]✓[/green] Created pre-commit config: "
+                    f"[bold]{precommit_path}[/bold]"
+                )
+                self.console.print(
+                    "\n[dim]Run [bold]pip install pre-commit && pre-commit install[/bold] "
+                    "to activate the hooks.[/dim]"
+                )
+        else:
+            self.console.print(
+                "\n[dim]Tip: Re-run with [bold]--pre-commit[/bold] to also set up "
+                "pre-commit hooks.[/dim]"
+            )
+
+        self.console.print("\n[bold green]✓ CI setup complete![/bold green]")
+        return result, 0
