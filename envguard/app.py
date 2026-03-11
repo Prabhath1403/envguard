@@ -257,7 +257,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install envguard
-        run: pip install envguard
+        run: pip install git+https://github.com/Prabhath1403/envguard.git
 
       - name: Validate .env schema
         run: envguard check --json

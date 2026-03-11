@@ -73,7 +73,7 @@ def test_setup_ci_workflow_content(tmp_path):
     assert "envguard check" in content
     assert "envguard audit" in content
     assert "actions/checkout" in content
-    assert "pip install envguard" in content
+    assert "envguard.git" in content  # installs from GitHub, not PyPI
 
 
 def test_setup_ci_workflow_path_is_correct(tmp_path):
