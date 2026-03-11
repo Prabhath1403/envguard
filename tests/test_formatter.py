@@ -32,6 +32,7 @@ def make_console() -> tuple[Console, StringIO]:
 
 # --- Validation JSON ---
 
+
 def test_format_validation_json_valid():
     result = ValidationResult(valid=True, issues=[], env_data={}, schema={})
     output = format_validation_json(result)
@@ -55,6 +56,7 @@ def test_format_validation_json_with_issues():
 
 # --- Validation Rich ---
 
+
 def test_format_validation_rich_passed():
     result = ValidationResult(valid=True, issues=[], env_data={}, schema={})
     console, buf = make_console()
@@ -72,8 +74,11 @@ def test_format_validation_rich_failed():
 
 # --- Diff JSON ---
 
+
 def test_format_diff_json_no_diff():
-    result = DiffResult(missing_in_env=[], undocumented_in_schema=[], env_vars=set(), schema_vars=set())
+    result = DiffResult(
+        missing_in_env=[], undocumented_in_schema=[], env_vars=set(), schema_vars=set()
+    )
     data = json.loads(format_diff_json(result))
     assert data["has_differences"] is False
     assert data["missing_in_env"] == []
@@ -94,8 +99,11 @@ def test_format_diff_json_with_diff():
 
 # --- Diff Rich ---
 
+
 def test_format_diff_rich_no_differences():
-    result = DiffResult(missing_in_env=[], undocumented_in_schema=[], env_vars=set(), schema_vars=set())
+    result = DiffResult(
+        missing_in_env=[], undocumented_in_schema=[], env_vars=set(), schema_vars=set()
+    )
     console, buf = make_console()
     format_diff_rich(result, console)
     assert "No differences" in buf.getvalue()
@@ -114,6 +122,7 @@ def test_format_diff_rich_with_differences():
 
 
 # --- Audit JSON ---
+
 
 def test_format_audit_json_clean():
     result = AuditResult(findings=[], total_vars=3)
@@ -139,6 +148,7 @@ def test_format_audit_json_with_findings():
 
 
 # --- Audit Rich ---
+
 
 def test_format_audit_rich_no_issues():
     result = AuditResult(findings=[], total_vars=5)

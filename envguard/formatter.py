@@ -113,8 +113,7 @@ def format_diff_rich(result: DiffResult, console: Console) -> None:
 
     # Summary
     console.print(
-        f"[dim]Total: {len(result.env_vars)} in .env, "
-        f"{len(result.schema_vars)} in schema[/dim]"
+        f"[dim]Total: {len(result.env_vars)} in .env, " f"{len(result.schema_vars)} in schema[/dim]"
     )
 
 

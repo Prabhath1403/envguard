@@ -2,7 +2,6 @@
 
 from envguard.models import AuditFinding, AuditResult, Severity
 
-
 # Placeholder patterns to detect
 PLACEHOLDER_PATTERNS = [
     "changeme",

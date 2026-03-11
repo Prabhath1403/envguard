@@ -71,8 +71,7 @@ def test_validate_undocumented_variable() -> None:
     assert result.valid  # Should pass validation (warning only)
     assert result.warning_count == 1
     assert any(
-        issue.key == "KEY2" and issue.severity == Severity.WARNING
-        for issue in result.issues
+        issue.key == "KEY2" and issue.severity == Severity.WARNING for issue in result.issues
     )
 
 
@@ -100,6 +99,5 @@ def test_validate_format_validation() -> None:
     assert not result.valid
     assert result.error_count == 1
     assert any(
-        issue.key == "PORT" and "integer" in issue.message.lower()
-        for issue in result.issues
+        issue.key == "PORT" and "integer" in issue.message.lower() for issue in result.issues
     )

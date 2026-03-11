@@ -24,6 +24,7 @@ def write_schema(path: Path, content: str) -> None:
 
 # --- check ---
 
+
 def test_check_valid(tmp_path):
     write_env(tmp_path / ".env", "PORT=8000\nDEBUG=true\n")
     write_schema(
@@ -77,15 +78,17 @@ def test_check_json_output(tmp_path):
         output_json=True,
     )
     import json
+
     data = json.loads(buf.getvalue())
     assert "valid" in data
 
 
 # --- diff ---
 
+
 def test_diff_no_differences(tmp_path):
     write_env(tmp_path / ".env", "A=1\n")
-    write_schema(tmp_path / ".env.schema.toml", '[A]\nrequired = true\n')
+    write_schema(tmp_path / ".env.schema.toml", "[A]\nrequired = true\n")
     app, _ = make_app()
     result, code = app.diff(
         env_path=tmp_path / ".env",
@@ -97,7 +100,7 @@ def test_diff_no_differences(tmp_path):
 
 def test_diff_missing_var(tmp_path):
     write_env(tmp_path / ".env", "A=1\n")
-    write_schema(tmp_path / ".env.schema.toml", '[A]\nrequired = true\n\n[B]\nrequired = true\n')
+    write_schema(tmp_path / ".env.schema.toml", "[A]\nrequired = true\n\n[B]\nrequired = true\n")
     app, _ = make_app()
     result, code = app.diff(
         env_path=tmp_path / ".env",
@@ -114,7 +117,7 @@ def test_diff_env_not_found(tmp_path):
 
 def test_diff_json_output(tmp_path):
     write_env(tmp_path / ".env", "A=1\n")
-    write_schema(tmp_path / ".env.schema.toml", '[A]\nrequired = true\n')
+    write_schema(tmp_path / ".env.schema.toml", "[A]\nrequired = true\n")
     app, buf = make_app()
     app.diff(
         env_path=tmp_path / ".env",
@@ -122,11 +125,13 @@ def test_diff_json_output(tmp_path):
         output_json=True,
     )
     import json
+
     data = json.loads(buf.getvalue())
     assert "has_differences" in data
 
 
 # --- audit ---
+
 
 def test_audit_clean_env(tmp_path):
     write_env(tmp_path / ".env", "APP_NAME=myapp\nPORT=8000\n")
@@ -155,11 +160,13 @@ def test_audit_json_output(tmp_path):
     app, buf = make_app()
     app.audit(env_path=tmp_path / ".env", output_json=True)
     import json
+
     data = json.loads(buf.getvalue())
     assert "findings" in data
 
 
 # --- init ---
+
 
 def test_init_creates_schema(tmp_path):
     write_env(tmp_path / ".env", "DATABASE_URL=postgres://localhost/db\nDEBUG=true\n")

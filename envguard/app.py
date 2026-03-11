@@ -219,9 +219,7 @@ class EnvGuardApp:
             self.console.print(
                 f"[green]✓[/green] Schema created: {schema_path}", style="bold green"
             )
-            self.console.print(
-                f"[dim]Generated schema for {len(env_data)} variables[/dim]"
-            )
+            self.console.print(f"[dim]Generated schema for {len(env_data)} variables[/dim]")
             self.console.print(
                 "\n[yellow]Note:[/yellow] Please review and customize the generated schema."
             )
@@ -305,17 +303,14 @@ repos:
 
         if git_root is None:
             self.console.print(
-                "[red]Error:[/red] No Git repository found. "
-                "Run [bold]git init[/bold] first.",
+                "[red]Error:[/red] No Git repository found. " "Run [bold]git init[/bold] first.",
                 style="bold red",
             )
             return result, 2
 
         result.git_detected = True
         result.project_root = git_root
-        self.console.print(
-            f"[green]✓[/green] Git repository detected: [bold]{git_root}[/bold]"
-        )
+        self.console.print(f"[green]✓[/green] Git repository detected: [bold]{git_root}[/bold]")
 
         # -- 2. Create GitHub Actions workflow ----------------------------------
         workflows_dir = git_root / ".github" / "workflows"
@@ -332,9 +327,7 @@ repos:
             workflow_path.write_text(self._CI_WORKFLOW_TEMPLATE)
             result.workflow_created = True
             result.workflow_path = workflow_path
-            self.console.print(
-                f"[green]✓[/green] Created workflow: [bold]{workflow_path}[/bold]"
-            )
+            self.console.print(f"[green]✓[/green] Created workflow: [bold]{workflow_path}[/bold]")
 
         # -- 3. Optionally set up pre-commit ------------------------------------
         if setup_precommit:
@@ -351,8 +344,7 @@ repos:
                 result.precommit_created = True
                 result.precommit_path = precommit_path
                 self.console.print(
-                    f"[green]✓[/green] Created pre-commit config: "
-                    f"[bold]{precommit_path}[/bold]"
+                    f"[green]✓[/green] Created pre-commit config: " f"[bold]{precommit_path}[/bold]"
                 )
                 self.console.print(
                     "\n[dim]Run [bold]pip install pre-commit && pre-commit install[/bold] "

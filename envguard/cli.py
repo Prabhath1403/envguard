@@ -220,9 +220,7 @@ def setup_ci(
 
     # If flag not explicitly passed, ask interactively
     if pre_commit is None:
-        pre_commit = typer.confirm(
-            "Also set up pre-commit hooks?", default=False
-        )
+        pre_commit = typer.confirm("Also set up pre-commit hooks?", default=False)
 
     _, exit_code = app_instance.setup_ci(setup_precommit=pre_commit)
     raise typer.Exit(code=exit_code)

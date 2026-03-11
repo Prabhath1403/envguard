@@ -47,9 +47,7 @@ def test_load_schema_non_table_entry(tmp_path):
 
 def test_load_schema_multiple_entries(tmp_path):
     schema_file = tmp_path / ".env.schema.toml"
-    schema_file.write_text(
-        '[A]\nrequired = true\n\n[B]\nrequired = false\nformat = "int"\n'
-    )
+    schema_file.write_text('[A]\nrequired = true\n\n[B]\nrequired = false\nformat = "int"\n')
     schema = load_schema(schema_file)
     assert len(schema) == 2
     assert schema["B"].format == "int"
@@ -62,7 +60,7 @@ def test_create_default_schema(tmp_path):
     content = output.read_text()
     assert "[DATABASE_URL]" in content
     assert "[DEBUG]" in content
-    assert 'required = true' in content
+    assert "required = true" in content
     assert 'format = "string"' in content
 
 

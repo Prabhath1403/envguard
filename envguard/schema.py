@@ -73,7 +73,7 @@ def create_default_schema(output_path: Path, env_data: dict[str, str]) -> None:
 
     for key in sorted(env_data.keys()):
         lines.append(f"[{key}]")
-        lines.append('required = true')
+        lines.append("required = true")
         lines.append('format = "string"')
         lines.append(f'description = "Description for {key}"')
         lines.append("")
