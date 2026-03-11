@@ -1,0 +1,19 @@
+- id: envguard-check
+  name: Validate .env files
+  description: Validates .env file against .env.schema.toml using envguard
+  entry: envguard check
+  language: python
+  pass_filenames: false
+  types: []
+  always_run: false
+  files: '\.env$|\.env\..*$'
+
+- id: envguard-audit
+  name: Audit .env security
+  description: Audits .env file for weak secrets, placeholders, and test values using envguard
+  entry: envguard audit
+  language: python
+  pass_filenames: false
+  types: []
+  always_run: false
+  files: '\.env$|\.env\..*$'

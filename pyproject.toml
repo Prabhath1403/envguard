@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [
-    { name = "Your Name", email = "your.email@example.com" }
+    { name = "Prabhath", email = "Prabhath1403@users.noreply.github.com" }
 ]
 keywords = ["env", "environment", "validation", "audit", "cli", "devops"]
 classifiers = [
@@ -34,15 +34,19 @@ dev = [
     "pytest-cov>=4.0.0",
     "black>=23.0.0",
     "mypy>=1.0.0",
+    "ruff>=0.1.0",
+    "build>=1.0.0",
+    "twine>=4.0.0",
 ]
 
 [project.scripts]
 envguard = "envguard.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/envguard"
-Repository = "https://github.com/yourusername/envguard"
-Issues = "https://github.com/yourusername/envguard/issues"
+Homepage = "https://github.com/Prabhath1403/envguard"
+Repository = "https://github.com/Prabhath1403/envguard"
+Issues = "https://github.com/Prabhath1403/envguard/issues"
+Changelog = "https://github.com/Prabhath1403/envguard/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["."]

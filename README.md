@@ -1,5 +1,12 @@
 # envguard
 
+[![CI](https://github.com/Prabhath1403/envguard/actions/workflows/ci.yml/badge.svg)](https://github.com/Prabhath1403/envguard/actions/workflows/ci.yml)
+[![PyPI version](https://badge.fury.io/py/envguard.svg)](https://badge.fury.io/py/envguard)
+[![Python Versions](https://img.shields.io/pypi/pyversions/envguard.svg)](https://pypi.org/project/envguard/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![codecov](https://codecov.io/gh/Prabhath1403/envguard/branch/main/graph/badge.svg)](https://codecov.io/gh/Prabhath1403/envguard)
+
 A production-ready Python CLI tool for validating and auditing `.env` files using schema-based validation.
 
 ## Features
@@ -13,7 +20,7 @@ A production-ready Python CLI tool for validating and auditing `.env` files usin
 
 ## Installation
 
-### From PyPI (when published)
+### From PyPI
 
 ```bash
 pip install envguard
@@ -22,7 +29,7 @@ pip install envguard
 ### From source
 
 ```bash
-git clone https://github.com/yourusername/envguard.git
+git clone https://github.com/Prabhath1403/envguard.git
 cd envguard
 pip install -e .
 ```
@@ -186,7 +193,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install envguard
         run: pip install envguard
       - name: Validate .env schema
@@ -197,8 +204,33 @@ jobs:
 
 ### Pre-commit Hook
 
+The fastest way to protect your team is to add envguard as a [pre-commit](https://pre-commit.com/) hook.
+
+#### Using the published hook (recommended)
+
+Add this to your `.pre-commit-config.yaml`:
+
 ```yaml
-# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/Prabhath1403/envguard
+    rev: v0.1.0  # Use the latest tag
+    hooks:
+      - id: envguard-check
+      - id: envguard-audit
+```
+
+Then install:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+#### Using a local install
+
+If you have envguard installed locally:
+
+```yaml
 repos:
   - repo: local
     hooks:
